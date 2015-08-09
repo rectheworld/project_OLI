@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zip Code Example</title>
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="citysdk.js" type="text/javascript"></script>
+    <script src="citysdk.census.js" type="text/javascript"></script>
+
+    <script>
+        var sdk, census;
+
+        $(document).ready(function() {
+            sdk = new CitySDK();
+            census = sdk.modules.census;
+
+            var apiKey = "32d9651dba1ab50b14d0d0a69d43c55888ac1279";
+            census.enable(apiKey);
+        });
+
+        function submit() {
+            console.log("working");
+            var street = $('#street');
+            var city = $('#city');
+            var state = $('#state');
+
+            var request = {
+                address: {
+                    street: street.val(),
+                    city: city.val(),
+                    state: state.val()
+                },
+
+                variables: [
+                    "income",
+                    "population"
+                ],
+                level: $("#level option:selected").val()
+            }
+            census.APIRequest(request, function(response) {
+                var output = $('#output');
+                output.empty();
+                output.append("Coordinates: " + response.lat + ", " + response.lng + " <br/>");
+                output.append("Median Income: " + response.data[0].income + "<br/>");
+                output.append("Population: " + response.data[0].population + " </br>");
+                /*output.append("<br/><br/><br/>Here's the address object we sent and what matched:<br/><br/>");
+                output.append("Address: " + JSON.stringify(response.address, null, 4) + "<br/>");*/
+            });
+        }
+    </script>
+</head>
+<body>
+<div>
+    <h2>Population and Income by Address</h2>
+    Street Address: <input type="text" id="street" value="18 F Street NW"/><br/>
+    City: <input type="text" id="city" value="Washington"/><br/>
+    State: <input type="text" id="state" value="DC"/><br/>
+    <select id="level">
+        <option value="tract" selected>Tract</option>
+        <option value="state">State</option>
+        <option value="county">County</option>
+        <option value="blockGroup">Block Group</option>
+        <option value="place">Incorporated Place</option>
+    </select>
+    <input type="submit" onclick="submit()" value="Query"/>
+</div>
+<pre id="output">
+
+</pre>
+</body>
+</html>
