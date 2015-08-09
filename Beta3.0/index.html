@@ -37,15 +37,26 @@
                     "population",
                     "education_bachelors",
                 ],
-                level: "blockGroup", 
+                level: "county", 
             }
             census.APIRequest(request, function(response) {
+                console.log("Inside Quary");
                 var output = $('#output');
                 output.empty();
                 output.append("Coordinates: " + response.lat + ", " + response.lng + " <br/>");
                 output.append("Median Income: " + response.data[0].income + "<br/>");
                 output.append("Population: " + response.data[0].population + " </br>");
                  output.append("Education%: " + (response.data[0].education_bachelors / response.data[0].population).toFixed(2) + "% </br>");
+                 var json_data = {
+                    "lat":  response.lat,
+                    "long": response.lng,
+                    "Median Income":response.data[0].income,
+                    "Population":response.data[0].population,
+                    "Education" :(response.data[0].education_bachelors / response.data[0].population).toFixed(2)
+                 }
+
+
+                 console.log(json_data)
             });
         }
     </script>
